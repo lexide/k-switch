@@ -1,0 +1,22 @@
+{
+    "name": "lexide/k-switch",
+    "description": "A PHP library to switch cases of a property or element name",
+    "type": "library",
+
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Danny Smart",
+            "email": "downsider84@hotmail.com"
+        }
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "^4.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Lexide\\KSwitch\\": "src",
+            "Lexide\\KSwitch\\Test\\": "test"
+        }
+    }
+}
