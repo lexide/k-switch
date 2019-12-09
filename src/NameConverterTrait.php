@@ -59,25 +59,7 @@ trait NameConverterTrait
 
         foreach ($data as $property => $value) {
             $originalProperty = $property;
-            switch ($case) {
-                case StringCases::STUDLY_CAPS:
-                    $property = $this->toStudlyCaps($property);
-                    break;
-                case StringCases::CAMEL_CASE:
-                    $property = $this->toCamelCase($property);
-                    break;
-                case StringCases::SNAKE_CASE:
-                    $property = $this->toSplitCase($property);
-                    break;
-                case StringCases::DASH_CASE:
-                    $property = $this->toSplitCase($property, "-");
-                    break;
-                default:
-                    if (strlen($case) == 1) {
-                        $property = $this->toSplitCase($property, $case);
-                    }
-                    break;
-            }
+            $property = $this->convertString($property, $case);
             if ($property != $originalProperty) {
                 unset($data[$originalProperty]);
                 $data[$property] = $value;
@@ -85,5 +67,31 @@ trait NameConverterTrait
         }
 
         return $data;
+    }
+
+    private function convertString($string, $case)
+    {
+        switch ($case) {
+            case StringCases::STUDLY_CAPS:
+                $string = $this->toStudlyCaps($string);
+                break;
+            case StringCases::CAMEL_CASE:
+                $string = $this->toCamelCase($string);
+                break;
+            case StringCases::SNAKE_CASE:
+            case StringCases::UNDERSCORES:
+                $string = $this->toSplitCase($string);
+                break;
+            case StringCases::DASH_CASE:
+            case StringCases::HYPHEN_CASE:
+                $string = $this->toSplitCase($string, "-");
+                break;
+            default:
+                if (strlen($case) == 1) {
+                    $string = $this->toSplitCase($string, $case);
+                }
+                break;
+        }
+        return $string;
     }
 } 
