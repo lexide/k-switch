@@ -141,6 +141,16 @@ class NameConverterMultibyteTraitTest extends \PHPUnit_Framework_TestCase
             [ #10 with multibyte characters
                 "WithŜómeMultibyteƇħaracters",
                 "with_ŝóme_multibyte_ƈħaracters"
+            ],
+            [ #11 using preg unsafe delimiter
+                "UsingA[Delimiter[ThatNeedsEscaping",
+                "using[a[delimiter[that[needs[escaping",
+                "["
+            ],
+            [ #12 using a delimiter that needs escaping in the replacement
+                "UsingADelimiterThatNeedsEscaping",
+                "using\\a\\delimiter\\that\\needs\\escaping",
+                "\\"
             ]
         ];
     }

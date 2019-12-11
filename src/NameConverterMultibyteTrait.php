@@ -38,8 +38,8 @@ trait NameConverterMultibyteTrait
     {
         return mb_strtolower(
             preg_replace( // precede any capital letters or numbers with the separator (except when the character starts the string)
-                "/(?<!^|$separator)(\\p{Lu}|\\d+)/u",
-                $separator . '$1',
+                "/(?<!^|" . preg_quote($separator) . ")(\\p{Lu}|\\d+)/u",
+                addcslashes($separator, "$\\") . '$1',
                 preg_replace( // replace any non-word characters with the separator (e.g. for converting dash case to snake case)
                     "/[^\\p{L&}\\d]/u",
                     $separator,
