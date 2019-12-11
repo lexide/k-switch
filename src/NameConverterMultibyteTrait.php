@@ -92,7 +92,7 @@ trait NameConverterMultibyteTrait
                 $string = $this->toSplitCase($string, "-");
                 break;
             default:
-                if (strlen($case) == 1) {
+                if (mb_strlen($case) == 1) {
                     $string = $this->toSplitCase($string, $case);
                 }
                 break;
