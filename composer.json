@@ -10,7 +10,8 @@
         }
     ],
     "require": {
-        "php": ">=5.4"
+        "php": ">=5.4",
+        "ext-mbstring": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "^4.0.0"
@@ -22,7 +23,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Lexide\\KSwitch\\": "src",
+            "Lexide\\KSwitch\\": "src"
+
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
             "Lexide\\KSwitch\\Test\\": "test"
         }
     }
