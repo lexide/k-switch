@@ -1,6 +1,6 @@
 <?php
 
-namespace Lexide\KSwitch\Test;
+namespace Lexide\KSwitch\Test\Unit;
 
 use Lexide\KSwitch\NameConverterMultibyteTrait;
 use Lexide\KSwitch\NameConverterTrait;

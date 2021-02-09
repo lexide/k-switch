@@ -1,13 +1,14 @@
 <?php
 
-namespace Lexide\KSwitch\Test;
+namespace Lexide\KSwitch\Test\Unit;
 
 use Lexide\KSwitch\StringCases;
+use PHPUnit\Framework\TestCase;
 
 /**
  * NameConverterTraitTest
  */
-class NameConverterMultibyteTraitTest extends \PHPUnit_Framework_TestCase
+class NameConverterTraitTest extends TestCase
 {
 
     /**
@@ -15,9 +16,9 @@ class NameConverterMultibyteTraitTest extends \PHPUnit_Framework_TestCase
      */
     protected $model;
 
-    public function setup()
+    public function setup(): void
     {
-        $this->model = new NameConverterMultibyteImplementation();
+        $this->model = new NameConverterImplementation();
     }
 
     /**
@@ -52,7 +53,7 @@ class NameConverterMultibyteTraitTest extends \PHPUnit_Framework_TestCase
      */
     public function testConvertingArrayKeys(array $data, $case, array $expected)
     {
-        $this->assertArraySubset($expected, $this->model->convertArrayKeys($data, $case));
+        $this->assertEqualsCanonicalizing($expected, $this->model->convertArrayKeys($data, $case));
     }
 
     public function studlyCapsProvider()
@@ -85,10 +86,6 @@ class NameConverterMultibyteTraitTest extends \PHPUnit_Framework_TestCase
             [ #6
                 "inc1uding_numb3rs_4_gigglez",
                 "Inc1udingNumb3rs4Gigglez"
-            ],
-            [ #7 multipass ... sorry, multibyte
-                "including á ßüñƈħ ǒf Multibyte ©h4r4C73r5",
-                "IncludingÁßüñƈħǑfMultibyteH4r4C73r5"
             ]
         ];
     }
@@ -137,20 +134,6 @@ class NameConverterMultibyteTraitTest extends \PHPUnit_Framework_TestCase
             [ #9
                 "with_numbers_4nd_underscores",
                 "with_numbers_4nd_underscores"
-            ],
-            [ #10 with multibyte characters
-                "WithŜómeMultibyteƇħaracters",
-                "with_ŝóme_multibyte_ƈħaracters"
-            ],
-            [ #11 using preg unsafe delimiter
-                "UsingA[Delimiter[ThatNeedsEscaping",
-                "using[a[delimiter[that[needs[escaping",
-                "["
-            ],
-            [ #12 using a delimiter that needs escaping in the replacement
-                "UsingADelimiterThatNeedsEscaping",
-                "using\\a\\delimiter\\that\\needs\\escaping",
-                "\\"
             ]
         ];
     }

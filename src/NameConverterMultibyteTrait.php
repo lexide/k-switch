@@ -4,14 +4,16 @@ namespace Lexide\KSwitch;
 
 trait NameConverterMultibyteTrait
 {
-
+    /**
+     * @var string
+     */
     private $encoding = "UTF-8";
 
     /**
      * @param string $string
-     * @return string
+     * @return string|array|null
      */
-    private function toStudlyCaps($string)
+    private function toStudlyCaps(string $string): string|array|null
     {
         return preg_replace_callback(
             "/([^\\p{L&}\\d]+|^)[\\p{L&}\\d]/u",
@@ -22,7 +24,11 @@ trait NameConverterMultibyteTrait
         );
     }
 
-    private function toCamelCase($string)
+    /**
+     * @param string $string
+     * @return string
+     */
+    private function toCamelCase(string $string): string
     {
         $studly = $this->toStudlyCaps($string);
 
@@ -34,7 +40,7 @@ trait NameConverterMultibyteTrait
      * @param string $separator
      * @return string
      */
-    private function toSplitCase($string, $separator = "_")
+    private function toSplitCase(string $string, string $separator = "_"): string
     {
         return mb_strtolower(
             preg_replace( // precede any capital letters or numbers with the separator (except when the character starts the string)
@@ -55,7 +61,8 @@ trait NameConverterMultibyteTrait
      * @param string $case
      * @return array
      */
-    private function convertArrayKeys(array $data, $case) {
+    private function convertArrayKeys(array $data, string $case): array
+    {
 
         foreach ($data as $property => $value) {
             $originalProperty = $property;
@@ -74,7 +81,7 @@ trait NameConverterMultibyteTrait
      * @param string $case
      * @return string
      */
-    private function convertString($string, $case)
+    private function convertString(string $string, string $case): string
     {
         switch ($case) {
             case StringCases::STUDLY_CAPS:
