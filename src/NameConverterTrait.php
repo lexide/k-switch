@@ -2,13 +2,13 @@
 
 namespace Lexide\KSwitch;
 
-trait NameConverterTrait 
+trait NameConverterTrait
 {
     /**
      * @param string $string
      * @return string
      */
-    private function toStudlyCaps($string)
+    private function toStudlyCaps(string $string): string
     {
         return str_replace( // remove the spaces
             " ",
@@ -23,7 +23,11 @@ trait NameConverterTrait
         );
     }
 
-    private function toCamelCase($string)
+    /**
+     * @param string $string
+     * @return string
+     */
+    private function toCamelCase(string $string): string
     {
         return lcfirst($this->toStudlyCaps($string));
     }
@@ -33,7 +37,7 @@ trait NameConverterTrait
      * @param string $separator
      * @return string
      */
-    private function toSplitCase($string, $separator = "_")
+    private function toSplitCase(string $string, string $separator = "_"): string
     {
         return strtolower(
             preg_replace( // precede any capital letters or numbers with the separator (except when the character starts the string)
@@ -55,7 +59,8 @@ trait NameConverterTrait
      * @param $case
      * @return array
      */
-    private function convertArrayKeys(array $data, $case) {
+    private function convertArrayKeys(array $data, string $case): array
+    {
 
         foreach ($data as $property => $value) {
             $originalProperty = $property;
@@ -69,7 +74,12 @@ trait NameConverterTrait
         return $data;
     }
 
-    private function convertString($string, $case)
+    /**
+     * @param string $string
+     * @param string $case
+     * @return string
+     */
+    private function convertString(string $string, string $case): string
     {
         switch ($case) {
             case StringCases::STUDLY_CAPS:

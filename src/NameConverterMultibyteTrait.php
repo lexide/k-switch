@@ -4,29 +4,42 @@ namespace Lexide\KSwitch;
 
 trait NameConverterMultibyteTrait
 {
-
+    /**
+     * @var string
+     */
     private $encoding = "UTF-8";
 
     /**
      * @param string $string
      * @return string
      */
-    private function toStudlyCaps($string)
+    private function toStudlyCaps(string $string): string
     {
         return preg_replace_callback(
             "/([^\\p{L&}\\d]+|^)[\\p{L&}\\d]/u",
             function ($matches) {
-                return mb_strtoupper(mb_substr($matches[0], -1, null, $this->encoding), $this->encoding);
+                return mb_convert_case(
+                    mb_substr($matches[0], -1, null, $this->encoding),
+                    MB_CASE_UPPER_SIMPLE,
+                    $this->encoding
+                );
             },
             $string
         );
     }
 
-    private function toCamelCase($string)
+    /**
+     * @param string $string
+     * @return string
+     */
+    private function toCamelCase(string $string): string
     {
         $studly = $this->toStudlyCaps($string);
 
-        return mb_strtolower(mb_substr($studly, 0, 1, $this->encoding), $this->encoding) . mb_substr($studly, 1, null, $this->encoding);
+        return mb_convert_case(mb_substr($studly, 0, 1, $this->encoding),
+                MB_CASE_LOWER_SIMPLE,
+                $this->encoding)
+            . mb_substr($studly, 1, null, $this->encoding);
     }
 
     /**
@@ -34,9 +47,9 @@ trait NameConverterMultibyteTrait
      * @param string $separator
      * @return string
      */
-    private function toSplitCase($string, $separator = "_")
+    private function toSplitCase(string $string, string $separator = "_"): string
     {
-        return mb_strtolower(
+        return mb_convert_case(
             preg_replace( // precede any capital letters or numbers with the separator (except when the character starts the string)
                 "/(?<!^|" . preg_quote($separator) . ")(\\p{Lu}|\\d+)/u",
                 addcslashes($separator, "$\\") . '$1',
@@ -46,6 +59,7 @@ trait NameConverterMultibyteTrait
                     $string
                 )
             ),
+            MB_CASE_LOWER_SIMPLE,
             $this->encoding
         );
     }
@@ -55,7 +69,8 @@ trait NameConverterMultibyteTrait
      * @param string $case
      * @return array
      */
-    private function convertArrayKeys(array $data, $case) {
+    private function convertArrayKeys(array $data, string $case): array
+    {
 
         foreach ($data as $property => $value) {
             $originalProperty = $property;
@@ -74,7 +89,7 @@ trait NameConverterMultibyteTrait
      * @param string $case
      * @return string
      */
-    private function convertString($string, $case)
+    private function convertString(string $string, string $case): string
     {
         switch ($case) {
             case StringCases::STUDLY_CAPS:

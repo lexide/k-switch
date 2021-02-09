@@ -3,11 +3,12 @@
 namespace Lexide\KSwitch\Test;
 
 use Lexide\KSwitch\StringCases;
+use PHPUnit\Framework\TestCase;
 
 /**
  * NameConverterTraitTest
  */
-class NameConverterMultibyteTraitTest extends \PHPUnit_Framework_TestCase
+class NameConverterMultibyteTraitTest extends TestCase
 {
 
     /**
@@ -15,7 +16,7 @@ class NameConverterMultibyteTraitTest extends \PHPUnit_Framework_TestCase
      */
     protected $model;
 
-    public function setup()
+    public function setup(): void
     {
         $this->model = new NameConverterMultibyteImplementation();
     }
@@ -52,7 +53,7 @@ class NameConverterMultibyteTraitTest extends \PHPUnit_Framework_TestCase
      */
     public function testConvertingArrayKeys(array $data, $case, array $expected)
     {
-        $this->assertArraySubset($expected, $this->model->convertArrayKeys($data, $case));
+        $this->assertEqualsCanonicalizing($expected, $this->model->convertArrayKeys($data, $case));
     }
 
     public function studlyCapsProvider()
