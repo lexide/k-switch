@@ -1,6 +1,6 @@
 <?php
 
-namespace Lexide\KSwitch\Test\Unit;
+namespace Lexide\KSwitch\Test;
 
 use Lexide\KSwitch\StringCases;
 use PHPUnit\Framework\TestCase;

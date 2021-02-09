@@ -1,6 +1,6 @@
 <?php
 
-namespace Lexide\KSwitch\Test\Unit;
+namespace Lexide\KSwitch\Test;
 
 use Lexide\KSwitch\StringCases;
 use PHPUnit\Framework\TestCase;
@@ -88,8 +88,8 @@ class NameConverterMultibyteTraitTest extends TestCase
                 "Inc1udingNumb3rs4Gigglez"
             ],
             [ #7 multipass ... sorry, multibyte
-                "including á büñƈħ ǒf Multibyte ©h4r4C73r5",
-                "IncludingÁBüñƈħǑfMultibyteH4r4C73r5"
+                "including á ßüñƈħ ǒf Multibyte ©h4r4C73r5",
+                "IncludingÁßüñƈħǑfMultibyteH4r4C73r5"
             ]
         ];
     }

@@ -11,14 +11,18 @@ trait NameConverterMultibyteTrait
 
     /**
      * @param string $string
-     * @return string|array|null
+     * @return string
      */
-    private function toStudlyCaps(string $string): string|array|null
+    private function toStudlyCaps(string $string): string
     {
         return preg_replace_callback(
             "/([^\\p{L&}\\d]+|^)[\\p{L&}\\d]/u",
             function ($matches) {
-                return mb_strtoupper(mb_substr($matches[0], -1, null, $this->encoding), $this->encoding);
+                return mb_convert_case(
+                    mb_substr($matches[0], -1, null, $this->encoding),
+                    MB_CASE_UPPER_SIMPLE,
+                    $this->encoding
+                );
             },
             $string
         );
@@ -32,7 +36,10 @@ trait NameConverterMultibyteTrait
     {
         $studly = $this->toStudlyCaps($string);
 
-        return mb_strtolower(mb_substr($studly, 0, 1, $this->encoding), $this->encoding) . mb_substr($studly, 1, null, $this->encoding);
+        return mb_convert_case(mb_substr($studly, 0, 1, $this->encoding),
+                MB_CASE_LOWER_SIMPLE,
+                $this->encoding)
+            . mb_substr($studly, 1, null, $this->encoding);
     }
 
     /**
@@ -42,7 +49,7 @@ trait NameConverterMultibyteTrait
      */
     private function toSplitCase(string $string, string $separator = "_"): string
     {
-        return mb_strtolower(
+        return mb_convert_case(
             preg_replace( // precede any capital letters or numbers with the separator (except when the character starts the string)
                 "/(?<!^|" . preg_quote($separator) . ")(\\p{Lu}|\\d+)/u",
                 addcslashes($separator, "$\\") . '$1',
@@ -52,6 +59,7 @@ trait NameConverterMultibyteTrait
                     $string
                 )
             ),
+            MB_CASE_LOWER_SIMPLE,
             $this->encoding
         );
     }
