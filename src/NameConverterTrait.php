@@ -10,6 +10,11 @@ trait NameConverterTrait
      */
     private function toStudlyCaps(string $string): string
     {
+        // handle screaming snake case by converting to lowercase if there are no lowercase characters found
+        if (strtoupper($string) == $string) {
+            $string = strtolower($string);
+        }
+
         return str_replace( // remove the spaces
             " ",
             "",
@@ -35,28 +40,33 @@ trait NameConverterTrait
     /**
      * @param string $string
      * @param string $separator
+     * @param bool $screaming
      * @return string
      */
-    private function toSplitCase(string $string, string $separator = "_"): string
+    private function toSplitCase(string $string, string $separator = "_", bool $screaming = false): string
     {
-        return strtolower(
-            preg_replace( // precede any capital letters or numbers with the separator (except when the character starts the string)
-                "/(?<!^|_)([A-Z]|\\d+)/",
-                $separator . '$1',
-                preg_replace( // replace any non-word characters with the separator (e.g. for converting dash case to snake case)
-                    "/[^A-Za-z0-9]/",
-                    $separator,
-                    $string
-                )
+        // handle screaming snake case by converting to lowercase if there are no lowercase characters found
+        if (strtoupper($string) == $string) {
+            $string = strtolower($string);
+        }
+
+        $converted = preg_replace( // precede any capital letters or numbers with the separator (except when the character starts the string)
+            "/(?<!^|_)([A-Z]|\\d+)/",
+            $separator . '$1',
+            preg_replace( // replace any non-word characters with the separator (e.g. for converting dash case to snake case)
+                "/[^A-Za-z0-9]/",
+                $separator,
+                $string
             )
         );
+        return $screaming ? strtoupper($converted) : strtolower($converted);
     }
 
     /**
      * convert the keys of an array
      *
      * @param array $data
-     * @param $case
+     * @param string $case
      * @return array
      */
     private function convertArrayKeys(array $data, string $case): array
@@ -91,6 +101,9 @@ trait NameConverterTrait
             case StringCases::SNAKE_CASE:
             case StringCases::UNDERSCORES:
                 $string = $this->toSplitCase($string);
+                break;
+            case StringCases::SCREAMING_SNAKE_CASE:
+                $string = $this->toSplitCase($string, screaming: true);
                 break;
             case StringCases::DASH_CASE:
             case StringCases::HYPHEN_CASE:

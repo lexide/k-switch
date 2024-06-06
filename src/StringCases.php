@@ -14,6 +14,8 @@ class StringCases
 
     const SNAKE_CASE = "snake_case";
 
+    const SCREAMING_SNAKE_CASE = "SCREAMING_SNAKE_CASE";
+
     /**
      * Alias of SNAKE_CASE
      */
