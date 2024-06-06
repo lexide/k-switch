@@ -24,10 +24,10 @@ class NameConverterMultibyteTraitTest extends TestCase
     /**
      * @dataProvider studlyCapsProvider
      *
-     * @param $value
-     * @param $expected
+     * @param string $value
+     * @param string $expected
      */
-    public function testToStudlyCaps($value, $expected)
+    public function testToStudlyCaps(string $value, string $expected)
     {
         $this->assertEquals($expected, $this->model->toStudlyCaps($value));
     }
@@ -35,13 +35,14 @@ class NameConverterMultibyteTraitTest extends TestCase
     /**
      * @dataProvider splitCaseProvider
      *
-     * @param $value
-     * @param $expected
+     * @param string $value
+     * @param string $expected
      * @param string $separator
+     * @param bool $screaming
      */
-    public function testToSplitCase($value, $expected, $separator = "_")
+    public function testToSplitCase(string $value, string $expected, string $separator = "_", bool $screaming = false)
     {
-        $this->assertEquals($expected, $this->model->toSplitCase($value, $separator));
+        $this->assertEquals($expected, $this->model->toSplitCase($value, $separator, $screaming));
     }
 
     /**
@@ -51,104 +52,114 @@ class NameConverterMultibyteTraitTest extends TestCase
      * @param $case
      * @param array $expected
      */
-    public function testConvertingArrayKeys(array $data, $case, array $expected)
+    public function testConvertingArrayKeys(array $data, string $case, array $expected)
     {
         $this->assertEqualsCanonicalizing($expected, $this->model->convertArrayKeys($data, $case));
     }
 
-    public function studlyCapsProvider()
+    public function studlyCapsProvider(): array
     {
         return [
-            [ #0
+            "Simple, from lowercase" => [
                 "single",
                 "Single"
             ],
-            [ #1
+            "Snake case" => [
                 "double_trouble",
                 "DoubleTrouble"
             ],
-            [ #2
+            "Screaming snake case" => [
+                "THE_SNAKES_ARE_SCREAMING",
+                "TheSnakesAreScreaming"
+            ],
+            "Already in StudlyCaps" => [
                 "StudlyCaps",
                 "StudlyCaps"
             ],
-            [ #3
+            "Word split" => [
                 "with spaces",
                 "WithSpaces"
             ],
-            [ #4
+            "Split by random characters" => [
                 "with-other~characters",
                 "WithOtherCharacters"
             ],
-            [ #5
+            "Collapsing spaces" => [
                 "collapsing    separators",
                 "CollapsingSeparators"
             ],
-            [ #6
+            "Including numbers" => [
                 "inc1uding_numb3rs_4_gigglez",
                 "Inc1udingNumb3rs4Gigglez"
             ],
-            [ #7 multipass ... sorry, multibyte
+            "Multibyte characters" => [
                 "including á ßüñƈħ ǒf Multibyte ©h4r4C73r5",
                 "IncludingÁßüñƈħǑfMultibyteH4r4C73r5"
             ]
         ];
     }
 
-    public function splitCaseProvider()
+    public function splitCaseProvider(): array
     {
         return [
-            [ #0
+            "Simple" => [
                 "oneword",
                 "oneword"
             ],
-            [ #1
+            "Camel case" => [
                 "twoWords",
                 "two_words"
             ],
-            [ #2
+            "Studly caps" => [
                 "StudlyCaps",
                 "studly_caps"
             ],
-            [ #3
+            "Already in snake case" => [
                 "already_in_snake_case",
                 "already_in_snake_case"
             ],
-            [ #4
+            "Screaming!" => [
                 "ALLCAPS",
                 "a_l_l_c_a_p_s"
             ],
-            [ #5
+            "Camel case with numbers" => [
                 "W1thNumb3rs",
                 "w_1th_numb_3rs"
             ],
-            [ #6
+            "Studly caps with numbers" => [
                 "All4One",
                 "all_4_one"
             ],
-            [ #7
+            "Convert to words" => [
                 "SpaceOutTheWords",
                 "space out the words",
                 " "
             ],
-            [ #8
+            "Convert to alternate snake case" => [
                 "WithSomeOtherCharacter",
                 "with~some~other~character",
                 "~"
             ],
-            [ #9
+            "Snake case with numbers" => [
                 "with_numbers_4nd_underscores",
                 "with_numbers_4nd_underscores"
             ],
-            [ #10 with multibyte characters
+            "Screaming snake case" => [
+                "TheSnakesAreScreaming",
+                "THE_SNAKES_ARE_SCREAMING",
+                "_",
+                true
+            ],
+            "Studly caps with multibyte characters" => [
                 "WithŜómeMultibyteƇħaracters",
                 "with_ŝóme_multibyte_ƈħaracters"
             ],
-            [ #11 using preg unsafe delimiter
+            "Using a delimiter which is preg unsafe" => [
                 "UsingA[Delimiter[ThatNeedsEscaping",
                 "using[a[delimiter[that[needs[escaping",
                 "["
             ],
-            [ #12 using a delimiter that needs escaping in the replacement
+            "Using a delimiter that needs escaping in the replacement" => [
                 "UsingADelimiterThatNeedsEscaping",
                 "using\\a\\delimiter\\that\\needs\\escaping",
                 "\\"
@@ -156,7 +167,7 @@ class NameConverterMultibyteTraitTest extends TestCase
         ];
     }
 
-    public function arrayKeyProvider()
+    public function arrayKeyProvider(): \Generator
     {
         $camel = [
             "propOne" => "value1",
@@ -178,12 +189,18 @@ class NameConverterMultibyteTraitTest extends TestCase
             "a-longish-prop-name" => "value2",
             "shorty" => "value3"
         ];
+        $screaming = [
+            "PROP_ONE" => "value1",
+            "A_LONGISH_PROP_NAME" => "value2",
+            "SHORTY" => "value3"
+        ];
 
         $toTest = [
             StringCases::CAMEL_CASE => $camel,
             StringCases::STUDLY_CAPS => $studly,
             StringCases::SNAKE_CASE => $snake,
-            StringCases::DASH_CASE => $dash
+            StringCases::DASH_CASE => $dash,
+            StringCases::SCREAMING_SNAKE_CASE => $screaming
         ];
 
         foreach ($toTest as $input) {

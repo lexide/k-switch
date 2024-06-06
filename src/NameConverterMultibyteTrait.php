@@ -15,6 +15,10 @@ trait NameConverterMultibyteTrait
      */
     private function toStudlyCaps(string $string): string
     {
+        // handle screaming snake case by converting to lowercase if there are no lowercase characters found
+        if (preg_match("/\\p{Ll}/u", $string) == 0) {
+            $string = mb_strtolower($string, $this->encoding);
+        }
         return preg_replace_callback(
             "/([^\\p{L&}\\d]+|^)[\\p{L&}\\d]/u",
             function ($matches) {
@@ -45,9 +49,10 @@ trait NameConverterMultibyteTrait
     /**
      * @param string $string
      * @param string $separator
+     * @param bool $screaming
      * @return string
      */
-    private function toSplitCase(string $string, string $separator = "_"): string
+    private function toSplitCase(string $string, string $separator = "_", bool $screaming = false): string
     {
         return mb_convert_case(
             preg_replace( // precede any capital letters or numbers with the separator (except when the character starts the string)
@@ -59,7 +64,7 @@ trait NameConverterMultibyteTrait
                     $string
                 )
             ),
-            MB_CASE_LOWER_SIMPLE,
+            $screaming ? MB_CASE_UPPER_SIMPLE : MB_CASE_LOWER_SIMPLE,
             $this->encoding
         );
     }
@@ -101,6 +106,9 @@ trait NameConverterMultibyteTrait
             case StringCases::SNAKE_CASE:
             case StringCases::UNDERSCORES:
                 $string = $this->toSplitCase($string);
+                break;
+            case StringCases::SCREAMING_SNAKE_CASE:
+                $string = $this->toSplitCase($string, screaming: true);
                 break;
             case StringCases::DASH_CASE:
             case StringCases::HYPHEN_CASE:
