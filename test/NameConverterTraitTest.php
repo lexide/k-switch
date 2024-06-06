@@ -116,7 +116,7 @@ class NameConverterTraitTest extends TestCase
             ],
             "Screaming!" => [
                 "ALLCAPS",
-                "a_l_l_c_a_p_s"
+                "allcaps"
             ],
             "Camel case with numbers" => [
                 "W1thNumb3rs",
@@ -142,6 +142,12 @@ class NameConverterTraitTest extends TestCase
             ],
             "Screaming snake case" => [
                 "TheSnakesAreScreaming",
+                "THE_SNAKES_ARE_SCREAMING",
+                "_",
+                true
+            ],
+            "Already in screaming snake case" => [
+                "THE_SNAKES_ARE_SCREAMING",
                 "THE_SNAKES_ARE_SCREAMING",
                 "_",
                 true

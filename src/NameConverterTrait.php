@@ -45,6 +45,11 @@ trait NameConverterTrait
      */
     private function toSplitCase(string $string, string $separator = "_", bool $screaming = false): string
     {
+        // handle screaming snake case by converting to lowercase if there are no lowercase characters found
+        if (strtoupper($string) == $string) {
+            $string = strtolower($string);
+        }
+
         $converted = preg_replace( // precede any capital letters or numbers with the separator (except when the character starts the string)
             "/(?<!^|_)([A-Z]|\\d+)/",
             $separator . '$1',

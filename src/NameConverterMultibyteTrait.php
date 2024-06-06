@@ -54,6 +54,10 @@ trait NameConverterMultibyteTrait
      */
     private function toSplitCase(string $string, string $separator = "_", bool $screaming = false): string
     {
+        // handle screaming snake case by converting to lowercase if there are no lowercase characters found
+        if (preg_match("/\\p{Ll}/u", $string) == 0) {
+            $string = mb_strtolower($string, $this->encoding);
+        }
         return mb_convert_case(
             preg_replace( // precede any capital letters or numbers with the separator (except when the character starts the string)
                 "/(?<!^|" . preg_quote($separator) . ")(\\p{Lu}|\\d+)/u",
